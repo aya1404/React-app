@@ -1,65 +1,50 @@
-import NavBarr from './NavBar';
+import React, { Component } from 'react';
+import './App.css';
 
-import Alert from 'react-bootstrap/Alert';
+export default class App extends Component {
+  state = {
+    Person: {
+      fullName: "Aya Hamzaoui",
+      bio: "I will be a web developer",
+      imgSrc: "https://art.pixilart.com/67623cedae3d4ef.png",
+      profession: "Student"
+    },
+    show: true,
+    mountedTime: 0,
+  };
 
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+  show=()=> {
+    this.setState({show:!this.state.show})
+  }
 
-function App() {
-  return (
-    <div className="App">
-      <NavBarr/>
-      <Alert variant="success">
-        <Alert.Heading>Hey, nice to see you</Alert.Heading>
-        <p>
-          Welcome to our platform!here you can learn for free.
-        </p>
-        <hr />
-        <p className="mb-0">
-          Join us.
-        </p>
-      </Alert>
-      <div style={{ display:'flex' , marginLeft:'100px' , gap:'20px'}}>
-        <Card style={{ width: '22rem' }}>
-          <Card.Img variant="top" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/800px-Unofficial_JavaScript_logo_2.svg.png" />
-          <Card.Body>
-            <Card.Title>Javascript</Card.Title>
-            <Card.Text>
-              JavaScript is the Programming Language for the Web.
-              JavaScript can update and change both HTML and CSS.
-              JavaScript can calculate, manipulate and validate data.
-            </Card.Text>
-            <Button variant="primary">Learn Javascript</Button>
-          </Card.Body>
-        </Card>
+  componentDidMount() {
+    this.startTime = new Date().getTime();
 
-        <Card style={{ width: '22rem' }}>
-          <Card.Img variant="top" src="https://www.w3schools.com/whatis/img_react.jpg" />
-          <Card.Body>
-            <Card.Title>React</Card.Title>
-            <Card.Text>
-            React is an open-source JavaScript library created by Facebook 
-            that is used for building user interfaces specifically for Single-Page Applications.
-            </Card.Text>
-            <Button variant="primary">Learn React</Button>
-          </Card.Body>
-        </Card>
+    // Update elapsed time every second
+    this.intervalId = setInterval(() => {
+      const currentTime = new Date().getTime();
+      const elapsedTimeInSeconds = Math.floor((currentTime - this.startTime) / 1000);
+      this.setState({ elapsedTime: elapsedTimeInSeconds });
+    }, 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
 
-        <Card style={{ width: '22rem' }}>
-          <Card.Img variant="top" src="https://cdn.worldvectorlogo.com/logos/es6.svg" />
-          <Card.Body>
-            <Card.Title>ES6</Card.Title>
-            <Card.Text>
-            ECMAScript was created to standardize JavaScript,
-            and ES6 is the 6th version of ECMAScript, 
-            it was published in 2015 and it was the second major revision to JavaScript.
-            </Card.Text>
-            <Button variant="primary">Learn ES6</Button>
-          </Card.Body>
-        </Card>
+  render() {
+    return (
+      <div className='card'>
+        {this.state.show && (
+          <div className='profile'>
+            <img src={this.state.Person.imgSrc} style={{width:250 , height:250 , marginLeft:100 , borderRadius:150}}  ></img>
+            <h1>{this.state.Person.fullName}</h1>
+            <h3>{this.state.Person.bio}</h3>
+            <h3>Profession: {this.state.Person.profession}</h3>
+          </div>
+        )}
+        <button onClick= {()=>{this.show();this.componentDidMount()}}> {this.state.show ? 'Hide Profile' : 'Show Profile'}</button>
+        <p style={{color:'red'}}>Time since last mount: {this.state.elapsedTime} seconds</p>
       </div>
-    </div>
-  );
+    )
+  }
 }
-
-export default App;
